@@ -26,6 +26,12 @@ function initializeMatrix(len1, len2) {
     matrix[i] = new Array(len2);
   }
   matrix[0][0] = entry('none', 0);
+  for (var x = 1; x < len1; x++) {
+    matrix[x][0] = entry('down', matrix[x - 1][0].value);
+  }
+  for (var y = 1; y < len2; y++) {
+    matrix[0][y] = entry('right', matrix[0][y - 1].value);
+  }
   return matrix;
 }
 
