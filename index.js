@@ -13,7 +13,7 @@ module.exports = SeqAlign;
 SeqAlign.prototype.nw = function (seq1, seq2) {
   const seq1Length = seq1.length + 1;
   const seq2Length = seq2.length + 1;
-  var nwMatrix = initializeMatrix(seq1Length, seq2Length );
+  var nwMatrix = initializeMatrix(seq1Length, seq2Length);
   for (var i = 1; i < seq1Length; i++) {
     for (var j = 1; j < seq2Length; j++) {
       const diag = nwMatrix[i - 1][j - 1].value + getScore(seq1.charAt(i - 1), seq2.charAt(j - 1));
@@ -22,7 +22,7 @@ SeqAlign.prototype.nw = function (seq1, seq2) {
       nwMatrix[i][j] = getMax(diag, above, left);
     }
   }
-  const finalScore = nwMatrix[seq1Length-1][seq2Length-1].value;
+  const finalScore = nwMatrix[seq1Length - 1][seq2Length - 1].value;
   const directions = traceback(nwMatrix, seq1Length, seq2Length);
 }
 
