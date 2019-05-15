@@ -23,7 +23,7 @@ SeqAlign.prototype.nw = function (seq1, seq2) {
     }
   }
   const finalScore = nwMatrix[seq1Length - 1][seq2Length - 1].value;
-  const directions = traceback(nwMatrix, seq1Length, seq2Length);
+  const directions = traceback(nwMatrix, seq1Length - 1, seq2Length - 1);
 }
 
 /**
@@ -34,7 +34,15 @@ SeqAlign.prototype.nw = function (seq1, seq2) {
  * @param {number} seq2Length Length of the second sequence (plus 1)
  */
 function traceback(nwMatrix, seq1Length, seq2Length) {
-  // TODO
+  var values = [];
+  var currentEntry = nwMatrix[seq1Length][seq2Length];
+  var currentPosition = [seq1Length, seq2Length];
+  var holderEntry = currentEntry;
+  var holderPosition = currentPosition;
+  while (currentPosition[0] !== 0 && currentPosition[1] !== 0) {
+    // TODO
+    break;
+  }
 }
 
 /**
