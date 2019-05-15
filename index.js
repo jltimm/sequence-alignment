@@ -24,6 +24,39 @@ SeqAlign.prototype.nw = function (seq1, seq2) {
   }
   const finalScore = nwMatrix[seq1Length - 1][seq2Length - 1].value;
   const directions = traceback(nwMatrix, seq1Length - 1, seq2Length - 1);
+  var alignedSequences = parseDirections(directions, seq1, seq2);
+  // TODO: what to return?
+}
+
+/**
+ * Parses the directions array, return the two aligned sequences
+ * 
+ * @param {array} directions The directions array
+ * @param {string} seq1 The first sequence 
+ * @param {string} seq2 The second sequences
+ */
+function parseDirections(directions, seq1, seq2) {
+  var seq1Index = 0;
+  var seq2Index = 0;
+  var seq1Aligned = '';
+  var seq2Aligned = '';
+  for (var i = 0; i < directions.length; i++) {
+    if (directions[i] === 'down') {
+      seq1Aligned += seq1.charAt(seq1Index);
+      seq1Index++;
+      seq2Aligned += '-';
+    } else if (directions[i] === 'right') {
+      seq1Aligned += '-';
+      seq2Aligned += seq2.charAt(seq2Index);
+      seq2Index++;
+    } else {
+      seq1Aligned += seq1.charAt(seq1Index);
+      seq1Index++;
+      seq2Aligned += seq2.charAt(seq2Index);
+      seq2Index++;
+    }
+  }
+  return [seq1Aligned, seq2Aligned];
 }
 
 /**
@@ -35,14 +68,22 @@ SeqAlign.prototype.nw = function (seq1, seq2) {
  */
 function traceback(nwMatrix, seq1Length, seq2Length) {
   var values = [];
-  var currentEntry = nwMatrix[seq1Length][seq2Length];
-  var currentPosition = [seq1Length, seq2Length];
-  var holderEntry = currentEntry;
-  var holderPosition = currentPosition;
-  while (currentPosition[0] !== 0 && currentPosition[1] !== 0) {
-    // TODO
-    break;
+  var entry = nwMatrix[seq1Length][seq2Length];
+  var position = [seq1Length, seq2Length];
+  while (position[0] !== 0 && position[1] !== 0) {
+    if (entry.direction === 'diag') {
+      position = [position[0] - 1, position[1] - 1];
+    }
+    else if (entry.direction === 'right') {
+      position = [position[0], position[1] - 1];
+    }
+    else {
+      position = [position[0] - 1, position[1]];
+    }
+    values.push(entry.direction);
+    entry = nwMatrix[position[0]][position[1]];
   }
+  return values.reverse();
 }
 
 /**
@@ -112,3 +153,5 @@ function entry(direction, value) {
     value
   }
 }
+
+// TODO: change direction strings to integers
