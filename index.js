@@ -159,4 +159,4 @@ function entry(direction, value) {
   }
 }
 
-// TODO: change direction strings to integers
+// TODO: add matrices for comparisons
