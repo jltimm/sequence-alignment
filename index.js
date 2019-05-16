@@ -22,10 +22,14 @@ SeqAlign.prototype.nw = function (seq1, seq2) {
       nwMatrix[i][j] = getMax(diag, above, left);
     }
   }
-  const finalScore = nwMatrix[seq1Length - 1][seq2Length - 1].value;
+  const score = nwMatrix[seq1Length - 1][seq2Length - 1].value;
   const directions = traceback(nwMatrix, seq1Length - 1, seq2Length - 1);
-  var alignedSequences = parseDirections(directions, seq1, seq2);
-  // TODO: what to return?
+  const alignedSequences = parseDirections(directions, seq1, seq2);
+  return {
+    seq1: alignedSequences[0],
+    seq2: alignedSequences[1],
+    score
+  }
 }
 
 /**
