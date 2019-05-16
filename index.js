@@ -45,17 +45,18 @@ function parseDirections(directions, seq1, seq2) {
   var seq1Aligned = '';
   var seq2Aligned = '';
   for (var i = 0; i < directions.length; i++) {
-    if (directions[i] === 'down') {
+    if (directions[i] === 0) {
+      seq1Aligned += seq1.charAt(seq1Index);
+      seq1Index++;
+      seq2Aligned += seq2.charAt(seq2Index);
+      seq2Index++;
+      
+    } else if (directions[i] === 1) {
       seq1Aligned += seq1.charAt(seq1Index);
       seq1Index++;
       seq2Aligned += '-';
-    } else if (directions[i] === 'right') {
-      seq1Aligned += '-';
-      seq2Aligned += seq2.charAt(seq2Index);
-      seq2Index++;
     } else {
-      seq1Aligned += seq1.charAt(seq1Index);
-      seq1Index++;
+      seq1Aligned += '-';
       seq2Aligned += seq2.charAt(seq2Index);
       seq2Index++;
     }
@@ -75,14 +76,14 @@ function traceback(nwMatrix, seq1Length, seq2Length) {
   var entry = nwMatrix[seq1Length][seq2Length];
   var position = [seq1Length, seq2Length];
   while (position[0] !== 0 && position[1] !== 0) {
-    if (entry.direction === 'diag') {
+    if (entry.direction === 0) {
       position = [position[0] - 1, position[1] - 1];
     }
-    else if (entry.direction === 'right') {
-      position = [position[0], position[1] - 1];
+    else if (entry.direction === 1) {
+      position = [position[0] - 1, position[1]];
     }
     else {
-      position = [position[0] - 1, position[1]];
+      position = [position[0], position[1] - 1];
     }
     values.push(entry.direction);
     entry = nwMatrix[position[0]][position[1]];
@@ -101,11 +102,11 @@ function traceback(nwMatrix, seq1Length, seq2Length) {
 function getMax(diag, above, left) {
   const maxValue = Math.max(diag, above, left);
   if (maxValue === diag) {
-    return entry('diag', diag)
+    return entry(0, diag)
   } else if (maxValue === above) {
-    return entry('down', above)
+    return entry(1, above)
   } else {
-    return entry('right', left)
+    return entry(2, left)
   }
 }
 
@@ -134,12 +135,12 @@ function initializeMatrix(len1, len2) {
   for (var i = 0; i < len1; i++) {
     matrix[i] = new Array(len2);
     if (i === 0) {
-      matrix[0][0] = entry('none', 0);
+      matrix[0][0] = entry(-1, 0);
       for (var x = 1; x < len1; x++) {
-        matrix[0][x] = entry('right', matrix[0][x - 1].value - 2);
+        matrix[0][x] = entry(2, matrix[0][x - 1].value - 2);
       }
     } else {
-      matrix[i][0] = entry('down', matrix[i - 1][0].value - 2);
+      matrix[i][0] = entry(1, matrix[i - 1][0].value - 2);
     }
   }
   return matrix;
