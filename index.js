@@ -1,5 +1,6 @@
 module.exports = {
-  nw
+  nw,
+  sw
 };
 
 /**
@@ -13,7 +14,7 @@ module.exports = {
  function nw (seq1, seq2) {
   const seq1Length = seq1.length + 1;
   const seq2Length = seq2.length + 1;
-  var nwMatrix = initializeMatrix(seq1Length, seq2Length);
+  var nwMatrix = initializeNWMatrix(seq1Length, seq2Length);
   for (var i = 1; i < seq1Length; i++) {
     for (var j = 1; j < seq2Length; j++) {
       const diag = nwMatrix[i - 1][j - 1].value + getScore(seq1.charAt(i - 1), seq2.charAt(j - 1));
@@ -30,6 +31,33 @@ module.exports = {
     seq2: alignedSequences[1],
     score
   }
+}
+
+/**
+ * Swith-Waterman algorithm.
+ * 
+ * Performs local alignment, which finds the segments in two sequences that
+ * have similaries.
+ * 
+ * @param {string} seq1 The first sequence 
+ * @param {string} seq2 The second sequence
+ */
+function sw(seq1, seq2) {
+  const seq1Length = seq1.length + 1;
+  const seq2Length = seq2.length + 1;
+  var scoreMatrix = createScoreMatrix(seq1, seq2, seq1Length, seq2Length);
+}
+
+/**
+ * Creates the scoring matrix for Smith-Waterman
+ * 
+ * @param {string} seq1 The first sequence 
+ * @param {string} seq2 The second sequence
+ * @param {number} len1 Length of the first sequence
+ * @param {number} len2 Length of the second sequence
+ */
+function createScoreMatrix(seq1, seq2, len1, len2) {
+  var swMatrix = initializeSWMatrix(len1, len2);
 }
 
 /**
@@ -125,12 +153,33 @@ function getScore(char1, char2) {
 }
 
 /**
+ * Initializes the scoring matrix for Smith-Waterman
+ * 
+ * @param {number} len1 Length of the first sequence 
+ * @param {number} len2 Length of the second sequence
+ */
+function initializeSWMatrix(len1, len2) {
+  var matrix = new Array(len1);
+  for (var i = 0; i < len1; i++) {
+    matrix[i] = new Array(len2);
+    if (i === 0) {
+      for (var j = 0; j < len2; j++) {
+        matrix[i][j] = 0;
+      }
+    } else {
+      matrix[i][0] = 0;
+    }
+  }
+  return matrix;
+}
+
+/**
  * Initializes the matrix needed for the Needleman-Wunsch algorithm
  * 
  * @param {number} len1 The length (plus one) of the first sequence 
  * @param {number} len2 The length (plus one) of the second sequence 
  */
-function initializeMatrix(len1, len2) {
+function initializeNWMatrix(len1, len2) {
   var matrix = new Array(len1);
   for (var i = 0; i < len1; i++) {
     matrix[i] = new Array(len2);
