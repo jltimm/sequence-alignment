@@ -45,7 +45,7 @@ module.exports = {
 function sw(seq1, seq2) {
   const seq1Length = seq1.length + 1;
   const seq2Length = seq2.length + 1;
-  var scoreMatrix = createScoreMatrix(seq1, seq2, seq1Length, seq2Length);
+  var scoreMatrix = createScoringMatrix(seq1, seq2, seq1Length, seq2Length);
 }
 
 /**
@@ -56,7 +56,7 @@ function sw(seq1, seq2) {
  * @param {number} len1 Length of the first sequence
  * @param {number} len2 Length of the second sequence
  */
-function createScoreMatrix(seq1, seq2, len1, len2) {
+function createScoringMatrix(seq1, seq2, len1, len2) {
   var swMatrix = initializeSWMatrix(len1, len2);
 }
 
@@ -209,3 +209,4 @@ function entry(direction, value) {
 }
 
 // TODO: add matrices for comparisons
+// TODO: split this file into multiple segments
