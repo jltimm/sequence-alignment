@@ -1,6 +1,6 @@
-function SeqAlign() { }
-
-module.exports = SeqAlign;
+module.exports = {
+  nw
+};
 
 /**
  * Needleman–Wunsch algorithm.
@@ -10,7 +10,7 @@ module.exports = SeqAlign;
  * @param {string} seq1 The first sequence
  * @param {string} seq2 The second sequence
  */
-SeqAlign.prototype.nw = function (seq1, seq2) {
+ function nw (seq1, seq2) {
   const seq1Length = seq1.length + 1;
   const seq2Length = seq2.length + 1;
   var nwMatrix = initializeMatrix(seq1Length, seq2Length);
