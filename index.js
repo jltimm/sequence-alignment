@@ -11,7 +11,7 @@ module.exports = {
  * @param {string} seq1 The first sequence
  * @param {string} seq2 The second sequence
  */
- function nw (seq1, seq2) {
+function nw(seq1, seq2) {
   const seq1Length = seq1.length + 1;
   const seq2Length = seq2.length + 1;
   var nwMatrix = initializeNWMatrix(seq1Length, seq2Length);
@@ -46,6 +46,7 @@ function sw(seq1, seq2) {
   const seq1Length = seq1.length + 1;
   const seq2Length = seq2.length + 1;
   var scoreMatrix = createScoringMatrix(seq1, seq2, seq1Length, seq2Length);
+  console.log(scoreMatrix);
 }
 
 /**
@@ -58,6 +59,37 @@ function sw(seq1, seq2) {
  */
 function createScoringMatrix(seq1, seq2, len1, len2) {
   var swMatrix = initializeSWMatrix(len1, len2);
+  var maxScore = 0;
+  var maxPos;
+  for (var i = 1; i < len1; i++) {
+    for (var j = 1; j < len2; j++) {
+      score = calculateScore(swMatrix, i, j);
+      if (maxScore < score) {
+        maxScore = score;
+        maxPos = [i, j];
+      }
+      swMatrix[i][j] = score;
+    }
+  }
+  return {
+    swMatrix,
+    maxPos
+  };
+}
+
+/**
+ * Calculates the score of the current position
+ * 
+ * @param {2d array} swMatrix The sw matrix
+ * @param {number} i The row position
+ * @param {number} j The column position
+ */
+function calculateScore(swMatrix, i, j) {
+  const similarity = swMatrix[i - 1] == swMatrix[j - 1] ? 2 : -1;
+  const diag = swMatrix[i - 1][j - 1] + similarity;
+  const up = swMatrix[i - 1][j] - 1;
+  const left = swMatrix[i][j - 1] - 1;
+  return Math.max(0, diag, up, left);
 }
 
 /**
@@ -78,7 +110,6 @@ function parseDirections(directions, seq1, seq2) {
       seq1Index++;
       seq2Aligned += seq2.charAt(seq2Index);
       seq2Index++;
-      
     } else if (directions[i] === 1) {
       seq1Aligned += seq1.charAt(seq1Index);
       seq1Index++;
